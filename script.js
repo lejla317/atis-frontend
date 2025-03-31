@@ -1,80 +1,59 @@
-// Registrierung & Login
+const BASE_URL = "https://atis-backend.onrender.com";
+
+// Registrierung
 document.addEventListener("DOMContentLoaded", () => {
-    const registerForm = document.getElementById("registerForm");
-    const loginForm = document.getElementById("loginForm");
-  
-    if (registerForm) {
-      registerForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-  
-        const user = { name, email, password };
-        localStorage.setItem("user", JSON.stringify(user));
-        alert("Registrierung erfolgreich!");
+  const registerForm = document.getElementById("registerForm");
+  const loginForm = document.getElementById("loginForm");
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
+
+      const res = await fetch(`${BASE_URL}/api/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+      if (data.message === "Benutzer gespeichert") {
         window.location.href = "login.html";
+      }
+    });
+  }
+
+  // Login
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      const res = await fetch(`${BASE_URL}/api/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
       });
-    }
-  
-    if (loginForm) {
-      loginForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const email = document.getElementById("loginEmail").value;
-        const password = document.getElementById("loginPassword").value;
-  
-        const savedUser = JSON.parse(localStorage.getItem("user"));
-        if (savedUser && savedUser.email === email && savedUser.password === password) {
-          alert("Login erfolgreich!");
-          window.location.href = "dashboard.html";
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert(data.message);
+        localStorage.setItem("userName", data.name);
+        localStorage.setItem("userRole", data.role);
+        if (data.role === "arzt") {
+          window.location.href = "arzt-dashboard.html";
         } else {
-          alert("Falsche E-Mail oder Passwort.");
+          window.location.href = "patient-dashboard.html";
         }
-      });
-    }
-  
-    // Dashboard-Funktionen
-    const addForm = document.getElementById("addAppointmentForm");
-    const list = document.getElementById("appointmentList");
-  
-    if (addForm && list) {
-      const saveAppointments = (appointments) => {
-        localStorage.setItem("appointments", JSON.stringify(appointments));
-      };
-  
-      const loadAppointments = () => {
-        const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
-        list.innerHTML = "";
-        appointments.forEach((a, index) => {
-          const li = document.createElement("li");
-          li.textContent = `${a.name} – ${a.date} um ${a.time}`;
-          const del = document.createElement("button");
-          del.textContent = "❌";
-          del.onclick = () => {
-            appointments.splice(index, 1);
-            saveAppointments(appointments);
-            loadAppointments();
-          };
-          li.appendChild(del);
-          list.appendChild(li);
-        });
-      };
-  
-      loadAppointments();
-  
-      addForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = document.getElementById("patientName").value;
-        const date = document.getElementById("date").value;
-        const time = document.getElementById("time").value;
-  
-        const newAppointment = { name, date, time };
-        const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
-        appointments.push(newAppointment);
-        saveAppointments(appointments);
-        loadAppointments();
-        addForm.reset();
-      });
-    }
-  });
-  
+      } else {
+        alert(data.message);
+      }
+    });
+  }
+});
