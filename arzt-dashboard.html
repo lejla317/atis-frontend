@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Arzt-Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 10px;
+      width: 100px;
+      height: 80px;
+      text-align: center;
+    }
+    .frei {
+      background-color: #d4edda;
+    }
+    .gebucht {
+      background-color: #f8d7da;
+    }
+    .logout {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <button class="logout" onclick="logout()">Logout</button>
+  <h2>Arzt-Dashboard</h2>
+  <form id="freigabeForm">
+    <input type="date" id="date" required>
+    <input type="time" id="time" required>
+    <button type="submit">Termin freigeben</button>
+  </form>
+
+  <h3>Alle gebuchten Termine</h3>
+  <ul id="alleTermine"></ul>
+
+  <h3>Kalenderansicht – April 2025</h3>
+  <table id="kalender">
+    <tr>
+      <th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th>
+    </tr>
+  </table>
+
+  <script>
+    // Login-Schutz
+    const role = localStorage.getItem("userRole");
+    const arzt = localStorage.getItem("userName");
+    if (role !== "arzt" || !arzt) {
+      alert("Zugriff nur für Ärzte!");
+      window.location.href = "login.html";
+    }
+
+    // Logout-Funktion
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    // Termin freigeben
+    const form = document.getElementById("freigabeForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+
+      const res = await fetch("http://localhost:5000/api/termine", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date, time, arzt })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+      form.reset();
+      ladeGebuchteTermine();
+      ladeKalender();
+    });
+
+    // Gebuchte Termine anzeigen
+    async function ladeGebuchteTermine() {
+      const res = await fetch("http://localhost:5000/api/termine");
+      const termine = await res.json();
+      const ul = document.getElementById("alleTermine");
+      ul.innerHTML = "";
+
+      termine.forEach(t => {
+        if (t.status === "gebucht" && t.arzt === arzt) {
+          const li = document.createElement("li");
+          li.textContent = `${t.date} um ${t.time} – Patient: ${t.patient}`;
+          ul.appendChild(li);
+        }
+      });
+    }
+
+    // Kalenderansicht laden
+    async function ladeKalender() {
+      const res = await fetch("http://localhost:5000/api/termine");
+      const termine = await res.json();
+
+      const kalender = document.getElementById("kalender");
+      kalender.innerHTML = "<tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>";
+
+      let zeile = document.createElement("tr");
+      let tag = new Date("2025-04-01");
+      while (tag.getDay() !== 1) {
+        const leer = document.createElement("td");
+        zeile.appendChild(leer);
+        tag.setDate(tag.getDate() - 1);
+      }
+
+      tag = new Date("2025-04-01");
+      for (let d = 1; d <= 30; d++) {
+        const datumStr = `2025-04-${d.toString().padStart(2, "0")}`;
+        const zelle = document.createElement("td");
+        zelle.innerHTML = `<strong>${d}</strong><br>`;
+
+        const tagesTermine = termine.filter(t => t.date === datumStr && t.arzt === arzt);
+        if (tagesTermine.length > 0) {
+          tagesTermine.forEach(t => {
+            const info = document.createElement("div");
+            info.textContent = `${t.time} ${t.status === "frei" ? "🟢" : "❌"}`;
+            info.className = t.status === "frei" ? "frei" : "gebucht";
+            zelle.appendChild(info);
+          });
+        }
+
+        zeile.appendChild(zelle);
+        if (tag.getDay() === 0 || d === 30) {
+          kalender.appendChild(zeile);
+          zeile = document.createElement("tr");
+        }
+        tag.setDate(tag.getDate() + 1);
+      }
+    }
+
+    // Alles laden
+    ladeGebuchteTermine();
+    ladeKalender();
+  </script>
+</body>
+</html>

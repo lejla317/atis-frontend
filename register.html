@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Registrieren</title>
+</head>
+<body>
+  <h2>Registrieren</h2>
+  <form id="registerForm">
+    <input type="text" id="name" placeholder="Name" required><br>
+    <input type="email" id="email" placeholder="E-Mail" required><br>
+    <input type="password" id="password" placeholder="Passwort" required><br>
+
+    <select id="role" required>
+      <option value="">Rolle wählen</option>
+      <option value="arzt">Arzt</option>
+      <option value="patient">Patient</option>
+    </select><br>
+
+    <button type="submit">Registrieren</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("registerForm");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
+
+      const res = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, password, role })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Registrierung erfolgreich!");
+        window.location.href = "login.html";
+      } else {
+        alert(data.message || "Fehler bei der Registrierung");
+      }
+    });
+  </script>
+</body>
+</html>

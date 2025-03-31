@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>ATIS – Weiterleitung</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    .info {
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: #555;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2 id="welcome">Willkommen</h2>
+  <div class="info" id="rolle"></div>
+  <button onclick="logout()">Abmelden</button>
+
+  <script>
+    const role = localStorage.getItem("userRole");
+    const user = localStorage.getItem("userName");
+
+    if (!role || !user) {
+      alert("Nicht eingeloggt!");
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("welcome").textContent = `Willkommen, ${user}!`;
+      document.getElementById("rolle").textContent = `Rolle: ${role}`;
+
+      // Weiterleitung nach 3 Sekunden
+      setTimeout(() => {
+        if (role === "arzt") {
+          window.location.href = "arzt-dashboard.html";
+        } else {
+          window.location.href = "patient-dashboard.html";
+        }
+      }, 3000);
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
