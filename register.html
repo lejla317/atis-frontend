@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Registrieren</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h2>Registrieren</h2>
@@ -18,28 +19,6 @@
     <button type="submit">Registrieren</button>
   </form>
 
-  <script>
-    const BASE_URL = "https://atis-backend.onrender.com";
-
-    document.getElementById("registerForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const role = document.getElementById("role").value;
-
-      const res = await fetch(`${BASE_URL}/api/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, role })
-      });
-
-      const data = await res.json();
-      alert(data.message);
-      if (data.message === "Benutzer gespeichert") {
-        window.location.href = "login.html";
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

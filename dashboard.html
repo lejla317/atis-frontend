@@ -1,34 +1,14 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
-  <title>ATIS – Weiterleitung</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 40px;
-      text-align: center;
-    }
-    h2 {
-      margin-bottom: 10px;
-    }
-    .info {
-      margin-bottom: 20px;
-      font-size: 18px;
-      color: #555;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
+  <title>Redirecting...</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2 id="welcome">Willkommen</h2>
-  <div class="info" id="rolle"></div>
-  <button onclick="logout()">Abmelden</button>
+  <h2 id="welcome">Willkommen!</h2>
+  <div id="rolle"></div>
+  <button onclick="logout()">Logout</button>
 
   <script>
     const role = localStorage.getItem("userRole");
@@ -40,14 +20,8 @@
     } else {
       document.getElementById("welcome").textContent = `Willkommen, ${user}!`;
       document.getElementById("rolle").textContent = `Rolle: ${role}`;
-
-      // Weiterleitung nach 3 Sekunden
       setTimeout(() => {
-        if (role === "arzt") {
-          window.location.href = "arzt-dashboard.html";
-        } else {
-          window.location.href = "patient-dashboard.html";
-        }
+        window.location.href = role === "arzt" ? "arzt-dashboard.html" : "patient-dashboard.html";
       }, 3000);
     }
 
