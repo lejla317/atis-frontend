@@ -1,3 +1,4 @@
+/* Allgemeines Layout */
 body {
   font-family: Arial, sans-serif;
   padding: 40px;
@@ -6,43 +7,126 @@ body {
   text-align: center;
 }
 
-h2 {
+h1, h2, h3 {
   color: #007bff;
   margin-bottom: 20px;
 }
 
-form input, form select, form button {
+/* Formulare */
+form input,
+form select,
+form button {
   padding: 10px;
   margin: 5px;
   font-size: 16px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-button {
+/* Buttons allgemein */
+button,
+.btn {
   background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
+button:hover,
+.btn:hover {
   background-color: #0056b3;
 }
 
-table {
-  margin: 0 auto;
-  border-collapse: collapse;
+/* Logout & Profil Buttons */
+.logout {
+  background-color: #dc3545;
+}
+.logout:hover {
+  background-color: #c82333;
 }
 
+.profil {
+  background-color: #28a745;
+}
+.profil:hover {
+  background-color: #218838;
+}
+
+/* Termin-Listen */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px auto;
+  max-width: 500px;
+}
+li {
+  background-color: #fff;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Kalender */
+table {
+  margin: 20px auto;
+  border-collapse: collapse;
+}
 td, th {
   border: 1px solid #ccc;
   width: 100px;
   height: 80px;
+  text-align: center;
+  vertical-align: top;
+  padding: 5px;
 }
-
 .frei {
   background-color: #d4edda;
 }
-
 .gebucht {
   background-color: #f8d7da;
+}
+
+/* Kalender-Grid (für Patient) */
+.kalender {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-top: 30px;
+}
+.tag {
+  padding: 10px;
+  background-color: white;
+  border-radius: 4px;
+  min-height: 60px;
+  font-size: 14px;
+  box-shadow: 0 0 3px rgba(0,0,0,0.1);
+}
+
+/* Topbar für Dashboards */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.username {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+/* Logo */
+.logo {
+  width: 180px;
+  margin-bottom: 20px;
 }
