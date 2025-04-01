@@ -2,16 +2,72 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
+  <title>Login – ATIS</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .container img {
+      width: 80px;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: #007bff;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-  <h2>Login</h2>
-  <form id="loginForm">
-    <input type="email" id="loginEmail" placeholder="E-Mail" required><br>
-    <input type="password" id="loginPassword" placeholder="Passwort" required><br>
-    <button type="submit">Login</button>
-  </form>
+
+  <div class="container">
+    <img src="atis-logo.png" alt="ATIS Logo">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="E-Mail" required>
+      <input type="password" id="loginPassword" placeholder="Passwort" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
 
   <script src="script.js"></script>
 </body>
