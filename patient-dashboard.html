@@ -4,17 +4,167 @@
   <meta charset="UTF-8">
   <title>Patient-Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 10px;
+      width: 100px;
+      height: 80px;
+      text-align: center;
+      vertical-align: top;
+    }
+    .frei {
+      background-color: #d4edda;
+    }
+    .gebucht {
+      background-color: #f8d7da;
+    }
+    .header {
+      background-color: #007bff;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logout {
+      background: white;
+      color: #007bff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .logout:hover {
+      background-color: #e4e4e4;
+    }
+    button {
+      margin-top: 5px;
+      padding: 4px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+    }
+    .stornieren {
+      background-color: #dc3545;
+      color: white;
+    }
+    .buchen {
+      background-color: #28a745;
+      color: white;
+    }
+  </style>
 </head>
 <body>
-  <h2>Patient-Dashboard</h2>
-  <button onclick="logout()">Logout</button>
+  <div class="header">
+    <h2>Patient-Dashboard</h2>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
 
-  <h3>Verfügbare Termine</h3>
-  <ul id="terminListe"></ul>
+  <h3>Kalenderansicht – April 2025</h3>
+  <table id="kalender">
+    <tr>
+      <th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th>
+    </tr>
+  </table>
 
-  <h3>Meine Termine</h3>
-  <ul id="meineTermine"></ul>
+  <script>
+    const BASE_URL = "https://atis-backend.onrender.com";
+    const patient = localStorage.getItem("userName");
+    const role = localStorage.getItem("userRole");
 
-  <script src="script.js"></script>
+    if (!patient || role !== "patient") {
+      alert("Zugriff nur für Patienten!");
+      window.location.href = "login.html";
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    async function ladeKalender() {
+      const res = await fetch(`${BASE_URL}/api/termine`);
+      const termine = await res.json();
+
+      const kalender = document.getElementById("kalender");
+      kalender.innerHTML = "<tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>";
+
+      let tag = new Date("2025-04-01");
+      let zeile = document.createElement("tr");
+
+      while (tag.getDay() !== 1) {
+        zeile.appendChild(document.createElement("td"));
+        tag.setDate(tag.getDate() - 1);
+      }
+
+      tag = new Date("2025-04-01");
+
+      for (let d = 1; d <= 30; d++) {
+        const datumStr = `2025-04-${d.toString().padStart(2, "0")}`;
+        const zelle = document.createElement("td");
+        zelle.innerHTML = `<strong>${d}</strong><br>`;
+
+        const tagesTermine = termine.filter(t => t.date === datumStr);
+
+        tagesTermine.forEach(t => {
+          const info = document.createElement("div");
+          info.textContent = `${t.time} bei ${t.arzt}`;
+          info.className = t.status === "frei" ? "frei" : "gebucht";
+          zelle.appendChild(info);
+
+          const btn = document.createElement("button");
+
+          if (t.status === "frei") {
+            btn.textContent = "Buchen";
+            btn.className = "buchen";
+            btn.onclick = async () => {
+              const res = await fetch(`${BASE_URL}/api/termine/buchen`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: t._id, patient })
+              });
+              const data = await res.json();
+              alert(data.message);
+              ladeKalender();
+            };
+          }
+
+          if (t.status === "gebucht" && t.patient === patient) {
+            btn.textContent = "Stornieren";
+            btn.className = "stornieren";
+            btn.onclick = async () => {
+              const res = await fetch(`${BASE_URL}/api/termine/stornieren`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: t._id })
+              });
+              const data = await res.json();
+              alert(data.message);
+              ladeKalender();
+            };
+          }
+
+          zelle.appendChild(btn);
+        });
+
+        zeile.appendChild(zelle);
+
+        if (tag.getDay() === 0 || d === 30) {
+          kalender.appendChild(zeile);
+          zeile = document.createElement("tr");
+        }
+
+        tag.setDate(tag.getDate() + 1);
+      }
+    }
+
+    ladeKalender();
+  </script>
 </body>
 </html>
