@@ -2,14 +2,90 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting...</title>
+  <title>ATIS – Weiterleitung</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      text-align: center;
+      padding: 40px;
+      color: #333;
+    }
+
+    .logo {
+      width: 180px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+
+    #rolle {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    .loader {
+      margin: 20px auto;
+      width: 50px;
+      height: 50px;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- 🔥 Dein ATIS-Logo -->
+  <img src="atis-logo.png" alt="ATIS Logo" class="logo">
+
+  <!-- Begrüßung & Rolle -->
   <h2 id="welcome">Willkommen!</h2>
   <div id="rolle"></div>
+
+  <!-- Ladeanimation -->
+  <div class="loader"></div>
+  <p>Du wirst gleich weitergeleitet...</p>
+
+  <!-- Logout-Button -->
   <button onclick="logout()">Logout</button>
 
+  <div class="footer">ATIS – Arzttermin-Informations-System © 2025</div>
+
+  <!-- Script für Weiterleitung & Logout -->
   <script>
     const role = localStorage.getItem("userRole");
     const user = localStorage.getItem("userName");
@@ -20,6 +96,7 @@
     } else {
       document.getElementById("welcome").textContent = `Willkommen, ${user}!`;
       document.getElementById("rolle").textContent = `Rolle: ${role}`;
+
       setTimeout(() => {
         window.location.href = role === "arzt" ? "arzt-dashboard.html" : "patient-dashboard.html";
       }, 3000);

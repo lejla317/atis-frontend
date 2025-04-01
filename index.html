@@ -1,15 +1,77 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
-  <title>ATIS – Start</title>
+  <title>ATIS – Startseite</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      text-align: center;
+      padding: 40px;
+      color: #333;
+    }
+
+    .logo {
+      width: 180px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    a.button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    a.button:hover {
+      background-color: #0056b3;
+    }
+
+    .footer {
+      margin-top: 60px;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Logo oben -->
+  <img src="atis-logo.png" alt="ATIS Logo" class="logo">
+
   <h1>Willkommen bei ATIS</h1>
-  <p>Bitte einloggen oder registrieren:</p>
-  <a href="login.html">Login</a> |
-  <a href="register.html">Registrieren</a>
+  <p>Bitte logge dich ein oder registriere dich als neuer Benutzer.</p>
+
+  <div class="btn-container">
+    <a href="login.html" class="button">🔐 Login</a>
+    <a href="register.html" class="button">📝 Registrieren</a>
+  </div>
+
+  <div class="footer">ATIS – Arzttermin-Informations-System © 2025</div>
+
 </body>
 </html>
