@@ -82,21 +82,22 @@
     </tr>
   </table>
 
-  <div id="profilBox" style="display:none; margin-top: 20px;"></div>
-
   <script>
     const BASE_URL = "https://atis-backend.onrender.com";
 
     const role = localStorage.getItem("userRole");
     const arzt = localStorage.getItem("userName");
-    const profile = JSON.parse(localStorage.getItem("userProfile"));
+    const vorname = localStorage.getItem("firstname");
+    const nachname = localStorage.getItem("lastname");
+    const email = localStorage.getItem("email");
+    const birthday = localStorage.getItem("birthday");
 
     if (!arzt || role !== "arzt") {
       alert("Nur für Ärzte!");
       window.location.href = "login.html";
     }
 
-    document.getElementById("welcome").textContent = `Hallo, Dr. ${arzt}`;
+    document.getElementById("welcome").textContent = `Hallo, Dr. ${vorname}`;
 
     function logout() {
       localStorage.clear();
@@ -104,19 +105,13 @@
     }
 
     function zeigeProfil() {
-      const box = document.getElementById("profilBox");
-      if (box.style.display === "none") {
-        box.innerHTML = `
-          <h3>👤 Profil</h3>
-          <p><strong>Vorname:</strong> ${profile.firstname}</p>
-          <p><strong>Nachname:</strong> ${profile.lastname}</p>
-          <p><strong>Geburtstag:</strong> ${profile.birthday}</p>
-          <p><strong>E-Mail:</strong> ${profile.email}</p>
-        `;
-        box.style.display = "block";
-      } else {
-        box.style.display = "none";
-      }
+      alert(
+        `👤 Dein Profil:\n\n` +
+        `Vorname: ${vorname}\n` +
+        `Nachname: ${nachname}\n` +
+        `Geburtstag: ${birthday}\n` +
+        `E-Mail: ${email}`
+      );
     }
 
     const form = document.getElementById("freigabeForm");
@@ -163,8 +158,7 @@
       let zeile = document.createElement("tr");
       let tag = new Date("2025-04-01");
       while (tag.getDay() !== 1) {
-        const leer = document.createElement("td");
-        zeile.appendChild(leer);
+        zeile.appendChild(document.createElement("td"));
         tag.setDate(tag.getDate() - 1);
       }
 
@@ -175,14 +169,12 @@
         zelle.innerHTML = `<strong>${d}</strong><br>`;
 
         const tagesTermine = termine.filter(t => t.date === datumStr && t.arzt === arzt);
-        if (tagesTermine.length > 0) {
-          tagesTermine.forEach(t => {
-            const info = document.createElement("div");
-            info.textContent = `${t.time} ${t.status === "frei" ? "🟢" : "❌"}`;
-            info.className = t.status === "frei" ? "frei" : "gebucht";
-            zelle.appendChild(info);
-          });
-        }
+        tagesTermine.forEach(t => {
+          const info = document.createElement("div");
+          info.textContent = `${t.time} ${t.status === "frei" ? "🟢" : "❌"}`;
+          info.className = t.status === "frei" ? "frei" : "gebucht";
+          zelle.appendChild(info);
+        });
 
         zeile.appendChild(zelle);
         if (tag.getDay() === 0 || d === 30) {

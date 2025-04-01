@@ -2,31 +2,63 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard</title>
+  <title>ATIS – Weiterleitung</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      text-align: center;
+      padding: 40px;
+    }
+    .logo {
+      width: 160px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #007bff;
+    }
+    .loader {
+      margin: 30px auto;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #007bff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-  <h2>Willkommen, <span id="welcomeUser">Hallo!</span></h2>
-  <div>
-    <button onclick="logout()">Logout</button>
-  </div>
+  <img src="atis-logo.png" alt="ATIS Logo" class="logo">
+  <h2 id="welcomeText">Willkommen!</h2>
+  <div class="loader"></div>
+  <p>Du wirst gleich weitergeleitet...</p>
 
   <script>
-    // Benutzerdaten aus localStorage holen
-    const firstname = localStorage.getItem("firstname");
-    const lastname = localStorage.getItem("lastname");
+    const role = localStorage.getItem("userRole");
+    const name = localStorage.getItem("userName");
 
-    if (!firstname || !lastname) {
-      alert("Benutzer nicht eingeloggt!");
-      window.location.href = "login.html"; // Zur Login-Seite weiterleiten, wenn keine Daten vorhanden
-    }
-
-    document.getElementById("welcomeUser").textContent = `Hallo, ${firstname} ${lastname}!`;
-
-    // Logout-Funktion
-    function logout() {
-      localStorage.clear();
+    if (!role || !name) {
+      alert("Nicht eingeloggt!");
       window.location.href = "login.html";
+    } else {
+      document.getElementById("welcomeText").textContent = `Willkommen, ${name}!`;
+
+      setTimeout(() => {
+        if (role === "arzt") {
+          window.location.href = "arzt-dashboard.html";
+        } else if (role === "patient") {
+          window.location.href = "patient-dashboard.html";
+        } else {
+          alert("Ungültige Rolle.");
+          window.location.href = "login.html";
+        }
+      }, 2000);
     }
   </script>
 </body>
