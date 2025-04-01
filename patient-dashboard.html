@@ -5,17 +5,55 @@
   <title>Patient-Dashboard</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    table {
-      margin: 20px auto;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #999;
-      padding: 10px;
-      width: 100px;
-      height: 80px;
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
       text-align: center;
-      vertical-align: top;
+      padding: 20px;
+    }
+    h2, h3 {
+      color: #007bff;
+    }
+    .logout {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 10px auto;
+      max-width: 500px;
+    }
+    li {
+      background-color: #fff;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .kalender {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 30px;
+    }
+    .tag {
+      padding: 10px;
+      background-color: white;
+      border-radius: 4px;
+      min-height: 60px;
+      font-size: 14px;
+      box-shadow: 0 0 3px rgba(0,0,0,0.1);
     }
     .frei {
       background-color: #d4edda;
@@ -23,62 +61,39 @@
     .gebucht {
       background-color: #f8d7da;
     }
-    .header {
+    button {
+      padding: 6px 12px;
+      font-size: 14px;
       background-color: #007bff;
       color: white;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logout {
-      background: white;
-      color: #007bff;
       border: none;
-      padding: 0.5rem 1rem;
       border-radius: 4px;
       cursor: pointer;
     }
-    .logout:hover {
-      background-color: #e4e4e4;
-    }
-    button {
-      margin-top: 5px;
-      padding: 4px 10px;
-      font-size: 14px;
-      cursor: pointer;
-      border: none;
-      border-radius: 4px;
-    }
-    .stornieren {
-      background-color: #dc3545;
-      color: white;
-    }
-    .buchen {
-      background-color: #28a745;
-      color: white;
+    button:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h2>Patient-Dashboard</h2>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+  <button class="logout" onclick="logout()">Logout</button>
+  <h2>Patient-Dashboard</h2>
 
-  <h3>Kalenderansicht – April 2025</h3>
-  <table id="kalender">
-    <tr>
-      <th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th>
-    </tr>
-  </table>
+  <h3>Verfügbare Termine</h3>
+  <ul id="terminListe"></ul>
+
+  <h3>Meine Termine</h3>
+  <ul id="meineTermine"></ul>
+
+  <h3>Kalenderansicht (April 2025)</h3>
+  <div class="kalender" id="kalenderAnsicht"></div>
 
   <script>
     const BASE_URL = "https://atis-backend.onrender.com";
-    const patient = localStorage.getItem("userName");
-    const role = localStorage.getItem("userRole");
 
-    if (!patient || role !== "patient") {
+    const role = localStorage.getItem("userRole");
+    const patient = localStorage.getItem("userName");
+    if (role !== "patient" || !patient) {
       alert("Zugriff nur für Patienten!");
       window.location.href = "login.html";
     }
@@ -88,83 +103,81 @@
       window.location.href = "login.html";
     }
 
-    async function ladeKalender() {
+    async function ladeTermine() {
       const res = await fetch(`${BASE_URL}/api/termine`);
       const termine = await res.json();
 
-      const kalender = document.getElementById("kalender");
-      kalender.innerHTML = "<tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>";
+      const freieListe = document.getElementById("terminListe");
+      const meineListe = document.getElementById("meineTermine");
+      freieListe.innerHTML = "";
+      meineListe.innerHTML = "";
 
-      let tag = new Date("2025-04-01");
-      let zeile = document.createElement("tr");
-
-      while (tag.getDay() !== 1) {
-        zeile.appendChild(document.createElement("td"));
-        tag.setDate(tag.getDate() - 1);
-      }
-
-      tag = new Date("2025-04-01");
-
-      for (let d = 1; d <= 30; d++) {
-        const datumStr = `2025-04-${d.toString().padStart(2, "0")}`;
-        const zelle = document.createElement("td");
-        zelle.innerHTML = `<strong>${d}</strong><br>`;
-
-        const tagesTermine = termine.filter(t => t.date === datumStr);
-
-        tagesTermine.forEach(t => {
-          const info = document.createElement("div");
-          info.textContent = `${t.time} bei ${t.arzt}`;
-          info.className = t.status === "frei" ? "frei" : "gebucht";
-          zelle.appendChild(info);
-
+      termine.forEach(t => {
+        // Freie Termine
+        if (t.status === "frei") {
+          const li = document.createElement("li");
+          li.textContent = `${t.date} um ${t.time} bei ${t.arzt}`;
           const btn = document.createElement("button");
-
-          if (t.status === "frei") {
-            btn.textContent = "Buchen";
-            btn.className = "buchen";
-            btn.onclick = async () => {
-              const res = await fetch(`${BASE_URL}/api/termine/buchen`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: t._id, patient })
-              });
-              const data = await res.json();
-              alert(data.message);
-              ladeKalender();
-            };
-          }
-
-          if (t.status === "gebucht" && t.patient === patient) {
-            btn.textContent = "Stornieren";
-            btn.className = "stornieren";
-            btn.onclick = async () => {
-              const res = await fetch(`${BASE_URL}/api/termine/stornieren`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: t._id })
-              });
-              const data = await res.json();
-              alert(data.message);
-              ladeKalender();
-            };
-          }
-
-          zelle.appendChild(btn);
-        });
-
-        zeile.appendChild(zelle);
-
-        if (tag.getDay() === 0 || d === 30) {
-          kalender.appendChild(zeile);
-          zeile = document.createElement("tr");
+          btn.textContent = "Buchen";
+          btn.onclick = async () => {
+            await fetch(`${BASE_URL}/api/termine/buchen`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ id: t._id, patient })
+            });
+            ladeTermine();
+          };
+          li.appendChild(btn);
+          freieListe.appendChild(li);
         }
 
-        tag.setDate(tag.getDate() + 1);
+        // Gebuchte Termine
+        if (t.status === "gebucht" && t.patient === patient) {
+          const li = document.createElement("li");
+          li.textContent = `${t.date} um ${t.time} bei ${t.arzt}`;
+          const btn = document.createElement("button");
+          btn.textContent = "Stornieren";
+          btn.onclick = async () => {
+            await fetch(`${BASE_URL}/api/termine/stornieren`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ id: t._id })
+            });
+            ladeTermine();
+          };
+          li.appendChild(btn);
+          meineListe.appendChild(li);
+        }
+      });
+
+      renderKalender(termine);
+    }
+
+    function renderKalender(termine) {
+      const container = document.getElementById("kalenderAnsicht");
+      container.innerHTML = "";
+
+      const tageImApril = 30;
+      for (let tag = 1; tag <= tageImApril; tag++) {
+        const datum = `2025-04-${String(tag).padStart(2, "0")}`;
+        const zelle = document.createElement("div");
+        zelle.classList.add("tag");
+        zelle.innerHTML = `<strong>${tag}</strong><br>`;
+
+        const tagesTermine = termine.filter(t => t.date === datum && t.patient === patient);
+
+        tagesTermine.forEach(t => {
+          const eintrag = document.createElement("div");
+          eintrag.textContent = `${t.time}`;
+          eintrag.className = t.status === "frei" ? "frei" : "gebucht";
+          zelle.appendChild(eintrag);
+        });
+
+        container.appendChild(zelle);
       }
     }
 
-    ladeKalender();
+    ladeTermine();
   </script>
 </body>
 </html>
