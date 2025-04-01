@@ -14,16 +14,37 @@
     h2, h3 {
       color: #007bff;
     }
-    .logout {
-      position: absolute;
-      top: 20px;
-      right: 20px;
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .username {
+      font-size: 18px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .btn {
       padding: 8px 16px;
-      background-color: #007bff;
-      color: white;
+      margin: 5px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+    }
+    .logout {
+      background-color: #dc3545;
+      color: white;
+    }
+    .logout:hover {
+      background-color: #c82333;
+    }
+    .profil {
+      background-color: #007bff;
+      color: white;
+    }
+    .profil:hover {
+      background-color: #0056b3;
     }
     ul {
       list-style-type: none;
@@ -76,7 +97,14 @@
   </style>
 </head>
 <body>
-  <button class="logout" onclick="logout()">Logout</button>
+  <div class="topbar">
+    <div class="username" id="welcomeUser">Hallo!</div>
+    <div>
+      <button class="btn profil" onclick="zeigeProfil()">Profil</button>
+      <button class="btn logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
   <h2>Patient-Dashboard</h2>
 
   <h3>Verfügbare Termine</h3>
@@ -93,14 +121,31 @@
 
     const role = localStorage.getItem("userRole");
     const patient = localStorage.getItem("userName");
+    const vorname = localStorage.getItem("userVorname");
+    const nachname = localStorage.getItem("userNachname");
+    const geburtstag = localStorage.getItem("userGeburtstag");
+    const email = localStorage.getItem("userEmail");
+
     if (role !== "patient" || !patient) {
       alert("Zugriff nur für Patienten!");
       window.location.href = "login.html";
     }
 
+    document.getElementById("welcomeUser").textContent = `Hallo ${vorname}!`;
+
     function logout() {
       localStorage.clear();
       window.location.href = "login.html";
+    }
+
+    function zeigeProfil() {
+      alert(
+        `👤 Dein Profil:\n\n` +
+        `Vorname: ${vorname}\n` +
+        `Nachname: ${nachname}\n` +
+        `Geburtstag: ${geburtstag}\n` +
+        `E-Mail: ${email}`
+      );
     }
 
     async function ladeTermine() {

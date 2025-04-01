@@ -4,11 +4,47 @@
   <meta charset="UTF-8">
   <title>Registrieren</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    h2 {
+      color: #007bff;
+    }
+    form {
+      display: inline-block;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+      margin: 10px 0;
+      padding: 10px;
+      width: 250px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
   <h2>Registrieren</h2>
   <form id="registerForm">
-    <input type="text" id="name" placeholder="Name" required><br>
+    <input type="text" id="vorname" placeholder="Vorname" required><br>
+    <input type="text" id="nachname" placeholder="Nachname" required><br>
+    <input type="date" id="geburtstag" required><br>
     <input type="email" id="email" placeholder="E-Mail" required><br>
     <input type="password" id="password" placeholder="Passwort" required><br>
     <select id="role" required>
@@ -19,6 +55,36 @@
     <button type="submit">Registrieren</button>
   </form>
 
-  <script src="script.js"></script>
+  <script>
+    const BASE_URL = "https://atis-backend.onrender.com";
+
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const vorname = document.getElementById("vorname").value;
+      const nachname = document.getElementById("nachname").value;
+      const geburtstag = document.getElementById("geburtstag").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
+
+      try {
+        const res = await fetch(`${BASE_URL}/api/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ vorname, nachname, geburtstag, email, password, role })
+        });
+
+        const data = await res.json();
+        alert(data.message);
+
+        if (data.message === "Benutzer registriert") {
+          window.location.href = "login.html";
+        }
+      } catch (err) {
+        alert("Fehler bei der Registrierung");
+        console.error(err);
+      }
+    });
+  </script>
 </body>
 </html>
