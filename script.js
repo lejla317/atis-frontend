@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.getElementById("registerForm");
   const loginForm = document.getElementById("loginForm");
 
-  // Registrierung
+  // 🔐 Registrierung
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Login
+  // 🔐 Login
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -45,13 +45,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (data.success) {
-        alert(data.message);
-        localStorage.setItem("userRole", data.role);
+        // 💾 Profildaten im localStorage speichern
         localStorage.setItem("userName", data.name); // Vorname
-        localStorage.setItem("userFirstname", data.profile.firstname);
-        localStorage.setItem("userLastname", data.profile.lastname);
-        localStorage.setItem("userBirthday", data.profile.birthday);
-        localStorage.setItem("userEmail", data.profile.email);
+        localStorage.setItem("userRole", data.role);
+        localStorage.setItem("firstname", data.profile.firstname);
+        localStorage.setItem("lastname", data.profile.lastname);
+        localStorage.setItem("birthday", data.profile.birthday);
+        localStorage.setItem("email", data.profile.email);
+
+        alert("Login erfolgreich!");
         window.location.href = "dashboard.html";
       } else {
         alert(data.message);
@@ -59,23 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Logout
-  const logout = () => {
+  // 🔓 Logout
+  window.logout = () => {
     localStorage.clear();
     window.location.href = "login.html";
   };
-  window.logout = logout;
-
-  // Profil anzeigen
-  const showProfile = () => {
-    const vorname = localStorage.getItem("userFirstname");
-    const nachname = localStorage.getItem("userLastname");
-    const email = localStorage.getItem("userEmail");
-    const geburtstag = localStorage.getItem("userBirthday");
-
-    alert(
-      `👤 Dein Profil:\n\nVorname: ${vorname}\nNachname: ${nachname}\nGeburtstag: ${geburtstag}\nE-Mail: ${email}`
-    );
-  };
-  window.showProfile = showProfile;
 });
