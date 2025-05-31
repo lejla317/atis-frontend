@@ -13,43 +13,6 @@
     <button type="submit">Login</button>
   </form>
 
-  <script>
-    const BASE_URL = "https://atis-backend.onrender.com";
-
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-
-      const res = await fetch(`${BASE_URL}/api/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        // Profildaten im localStorage speichern
-        localStorage.setItem("userRole", data.role);
-        localStorage.setItem("userName", data.name); // Vorname
-        localStorage.setItem("firstname", data.profile.firstname);
-        localStorage.setItem("lastname", data.profile.lastname);
-        localStorage.setItem("birthday", data.profile.birthday);
-        localStorage.setItem("email", data.profile.email);
-
-        alert("Login erfolgreich!");
-        window.location.href = "dashboard.html"; // Weiterleitung zum Dashboard
-      } else {
-        alert(data.message);
-      }
-    });
-
-    // Logout-Funktion
-    window.logout = () => {
-      localStorage.clear(); // Entfernt alle gespeicherten Daten aus dem LocalStorage
-      window.location.href = "login.html"; // Weiterleitung zur Login-Seite
-    };
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
