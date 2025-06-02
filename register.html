@@ -2,49 +2,85 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Registrieren</title>
+  <title>Registrieren – ATIS</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      color: #333;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
-  <h2>Registrieren</h2>
-  <form id="registerForm">
-    <input type="text" id="firstname" placeholder="Vorname" required><br>
-    <input type="text" id="lastname" placeholder="Nachname" required><br>
-    <input type="date" id="birthday" placeholder="Geburtstag" required><br>
-    <input type="email" id="email" placeholder="E-Mail" required><br>
-    <input type="password" id="password" placeholder="Passwort" required><br>
-    <select id="role" required>
-      <option value="">Rolle wählen</option>
-      <option value="arzt">Arzt</option>
-      <option value="patient">Patient</option>
-    </select><br>
-    <button type="submit">Registrieren</button>
-  </form>
+  <div class="container">
+    <h2>📝 Registrierung bei ATIS</h2>
+    <form id="registerForm">
+      <input type="text" id="firstname" placeholder="Vorname" required>
+      <input type="text" id="lastname" placeholder="Nachname" required>
+      <input type="date" id="birthday" required>
+      <input type="email" id="email" placeholder="E-Mail" required>
+      <input type="password" id="password" placeholder="Passwort" required>
+      <select id="role" required>
+        <option value="">-- Rolle wählen --</option>
+        <option value="patient">Patient</option>
+        <option value="arzt">Arzt</option>
+      </select>
+      <button type="submit">Registrieren</button>
+    </form>
+  </div>
 
-  <script>
-    const BASE_URL = "https://atis-backend.onrender.com";
+  <div class="footer">
+    &copy; 2025 ATIS – Arzttermin-Informations-System
+  </div>
 
-    document.getElementById("registerForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const firstname = document.getElementById("firstname").value;
-      const lastname = document.getElementById("lastname").value;
-      const birthday = document.getElementById("birthday").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const role = document.getElementById("role").value;
-
-      const res = await fetch(`${BASE_URL}/api/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstname, lastname, birthday, email, password, role })
-      });
-
-      const data = await res.json();
-      alert(data.message);
-      if (data.message === "Benutzer registriert") {
-        window.location.href = "login.html";
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

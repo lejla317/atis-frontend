@@ -4,6 +4,119 @@
   <meta charset="UTF-8">
   <title>Patient-Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .username {
+      font-size: 20px;
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .profil {
+      background-color: #28a745;
+    }
+
+    .logout {
+      background-color: #dc3545;
+    }
+
+    .profil:hover {
+      background-color: #218838;
+    }
+
+    .logout:hover {
+      background-color: #c82333;
+    }
+
+    h2, h3 {
+      text-align: center;
+      color: #007bff;
+      margin-top: 20px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    li {
+      background-color: #fff;
+      margin: 5px 0;
+      padding: 12px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    button {
+      padding: 6px 12px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    table {
+      margin: 30px auto;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 10px;
+      width: 100px;
+      height: 80px;
+      text-align: center;
+      vertical-align: top;
+    }
+
+    .frei {
+      background-color: #d4edda;
+      margin-top: 4px;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .gebucht {
+      background-color: #f8d7da;
+      margin-top: 4px;
+      padding: 4px;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
   <div class="topbar">
@@ -22,12 +135,15 @@
   <h3>Meine Termine</h3>
   <ul id="meineTermine"></ul>
 
-  <h3>Kalenderansicht (Juni 2025)</h3>
-  <div class="kalender" id="kalenderAnsicht"></div>
+  <h3>Kalender – Juni 2025</h3>
+  <table id="kalenderTabelle">
+    <tr>
+      <th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th>
+    </tr>
+  </table>
 
   <script>
     const BASE_URL = "https://atis-backend.onrender.com";
-
     const role = localStorage.getItem("userRole");
     const patient = localStorage.getItem("userName");
     const firstname = localStorage.getItem("firstname");
@@ -40,7 +156,7 @@
       window.location.href = "login.html";
     }
 
-    document.getElementById("welcomeUser").textContent = `Hallo ${firstname}!`;
+    document.getElementById("welcomeUser").textContent = `Hallo, ${firstname}!`;
 
     function logout() {
       localStorage.clear();
@@ -106,17 +222,23 @@
     }
 
     function renderKalender(termine) {
-      const container = document.getElementById("kalenderAnsicht");
-      container.innerHTML = "";
+      const kalender = document.getElementById("kalenderTabelle");
+      kalender.innerHTML = "<tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>";
 
-      const tageImJuni = 30;
-      for (let tag = 1; tag <= tageImJuni; tag++) {
-        const datum = `2025-06-${String(tag).padStart(2, "0")}`;
-        const zelle = document.createElement("div");
-        zelle.classList.add("tag");
-        zelle.innerHTML = `<strong>${tag}</strong><br>`;
+      let zeile = document.createElement("tr");
+      let tag = new Date("2025-06-01");
+      while (tag.getDay() !== 1) {
+        zeile.appendChild(document.createElement("td"));
+        tag.setDate(tag.getDate() - 1);
+      }
 
-        const tagesTermine = termine.filter(t => t.date === datum && t.patient === patient);
+      tag = new Date("2025-06-01");
+      for (let d = 1; d <= 30; d++) {
+        const datumStr = `2025-06-${d.toString().padStart(2, "0")}`;
+        const zelle = document.createElement("td");
+        zelle.innerHTML = `<strong>${d}</strong><br>`;
+
+        const tagesTermine = termine.filter(t => t.date === datumStr && t.patient === patient);
 
         tagesTermine.forEach(t => {
           const eintrag = document.createElement("div");
@@ -125,7 +247,13 @@
           zelle.appendChild(eintrag);
         });
 
-        container.appendChild(zelle);
+        zeile.appendChild(zelle);
+        if (tag.getDay() === 0 || d === 30) {
+          kalender.appendChild(zeile);
+          zeile = document.createElement("tr");
+        }
+
+        tag.setDate(tag.getDate() + 1);
       }
     }
 
