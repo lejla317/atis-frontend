@@ -1,63 +1,175 @@
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right, #f8f9fa, #e9ecef);
-  color: #343a40;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  font-family: Arial, sans-serif;
+  padding: 40px;
+  background-color: #f2f2f2;
+  color: #333;
   text-align: center;
 }
 
-.logo {
-  width: 150px;
+h1, h2, h3 {
+  color: #007bff;
   margin-bottom: 20px;
 }
 
-.start-container {
-  background-color: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  max-width: 400px;
-  width: 90%;
-}
-
-h1 {
-  margin-bottom: 10px;
-  color: #007bff;
-}
-
-p {
-  margin-bottom: 30px;
+/* Formulareingaben */
+form input, form select, form button {
+  padding: 10px;
+  margin: 5px;
   font-size: 16px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
+/* Buttons */
+button, .btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+button:hover, .btn:hover {
+  background-color: #0056b3;
+}
+
+/* Logout & Profil Buttons */
+.logout {
+  background-color: #dc3545;
+}
+
+.logout:hover {
+  background-color: #c82333;
+}
+
+.profil {
+  background-color: #28a745;
+}
+
+.profil:hover {
+  background-color: #218838;
+}
+
+/* Terminlisten */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px auto;
+  max-width: 500px;
+}
+
+li {
+  background-color: #fff;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Kalender-Grid (für alte Struktur) */
+.kalender {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-top: 30px;
+}
+
+.tag {
+  padding: 10px;
+  background-color: white;
+  border-radius: 4px;
+  min-height: 60px;
+  font-size: 14px;
+  box-shadow: 0 0 3px rgba(0,0,0,0.1);
+}
+
+/* Statusfarben */
+.frei {
+  background-color: #d4edda;
+}
+
+.gebucht {
+  background-color: #f8d7da;
+}
+
+/* Logo auf Startseite */
+.logo {
+  width: 180px;
+  margin-bottom: 20px;
+}
+
+/* Buttons auf Startseite */
 .btn-container {
   display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 a.button {
+  padding: 12px 24px;
+  font-size: 16px;
   background-color: #007bff;
   color: white;
-  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
   text-decoration: none;
-  border-radius: 6px;
-  transition: background-color 0.3s;
-  font-weight: bold;
 }
 
 a.button:hover {
   background-color: #0056b3;
 }
 
-footer {
+/* Footer */
+.footer {
   margin-top: 40px;
   font-size: 14px;
-  color: #6c757d;
+  color: #aaa;
+}
+
+/* Neue Blöcke für Terminlisten, Kalender etc. */
+.section {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Tabellenkalender (für Patienten & Ärzte) */
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 800px;
+}
+
+th, td {
+  border: 1px solid #999;
+  padding: 10px;
+  width: 100px;
+  height: 80px;
+  text-align: center;
+  vertical-align: top;
+}
+
+/* Topbar für Dashboard */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.username {
+  font-size: 20px;
+  font-weight: bold;
+  color: #007bff;
 }
