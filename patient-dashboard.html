@@ -22,7 +22,7 @@
   <h3>Meine Termine</h3>
   <ul id="meineTermine"></ul>
 
-  <h3>Kalenderansicht (April 2025)</h3>
+  <h3>Kalenderansicht (Juni 2025)</h3>
   <div class="kalender" id="kalenderAnsicht"></div>
 
   <script>
@@ -109,9 +109,9 @@
       const container = document.getElementById("kalenderAnsicht");
       container.innerHTML = "";
 
-      const tageImApril = 30;
-      for (let tag = 1; tag <= tageImApril; tag++) {
-        const datum = `2025-04-${String(tag).padStart(2, "0")}`;
+      const tageImJuni = 30;
+      for (let tag = 1; tag <= tageImJuni; tag++) {
+        const datum = `2025-06-${String(tag).padStart(2, "0")}`;
         const zelle = document.createElement("div");
         zelle.classList.add("tag");
         zelle.innerHTML = `<strong>${tag}</strong><br>`;

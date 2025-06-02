@@ -75,7 +75,7 @@
   <h3>Gebuchte Termine</h3>
   <ul id="alleTermine"></ul>
 
-  <h3>Kalender – April 2025</h3>
+  <h3>Kalender – Juni 2025</h3>
   <table id="kalender">
     <tr>
       <th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th>
@@ -156,15 +156,15 @@
       kalender.innerHTML = "<tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>";
 
       let zeile = document.createElement("tr");
-      let tag = new Date("2025-04-01");
+      let tag = new Date("2025-06-01");
       while (tag.getDay() !== 1) {
         zeile.appendChild(document.createElement("td"));
         tag.setDate(tag.getDate() - 1);
       }
 
-      tag = new Date("2025-04-01");
+      tag = new Date("2025-06-01");
       for (let d = 1; d <= 30; d++) {
-        const datumStr = `2025-04-${d.toString().padStart(2, "0")}`;
+        const datumStr = `2025-06-${d.toString().padStart(2, "0")}`;
         const zelle = document.createElement("td");
         zelle.innerHTML = `<strong>${d}</strong><br>`;
 
