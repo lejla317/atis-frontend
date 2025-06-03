@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.getElementById("registerForm");
   const loginForm = document.getElementById("loginForm");
 
-  // 🔐 Registrierung
+  // Registrierung
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -22,13 +22,20 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await res.json();
+
       if (data.message === "Benutzer registriert") {
         window.location.href = "login.html";
+      } else {
+        const errorBox = document.getElementById("registerError");
+        if (errorBox) {
+          errorBox.textContent = data.message;
+          errorBox.style.display = "block";
+        }
       }
     });
   }
 
-  // 🔐 Login (ohne Alert)
+  // Login
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -53,12 +60,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.location.href = "dashboard.html";
       } else {
-        alert(data.message);
+        const errorBox = document.getElementById("loginError");
+        if (errorBox) {
+          errorBox.textContent = data.message;
+          errorBox.style.display = "block";
+        } else {
+          console.log("Fehler:", data.message);
+        }
       }
     });
   }
 
-  // 🔓 Logout
+  // Logout
   window.logout = () => {
     localStorage.clear();
     window.location.href = "login.html";
