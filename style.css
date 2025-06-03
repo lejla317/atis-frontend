@@ -1,17 +1,23 @@
+/* ==== Body & Grundlayout ==== */
 body {
   font-family: Arial, sans-serif;
-  padding: 40px;
   background-color: #f2f2f2;
   color: #333;
-  text-align: center;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* ==== Überschriften ==== */
 h1, h2, h3 {
+  text-align: center;
   color: #007bff;
   margin-bottom: 20px;
 }
 
-/* Formulareingaben */
+/* ==== Formularfelder ==== */
 form input, form select, form button {
   padding: 10px;
   margin: 5px;
@@ -21,7 +27,7 @@ form input, form select, form button {
   border-radius: 4px;
 }
 
-/* Buttons */
+/* ==== Buttons ==== */
 button, .btn {
   background-color: #007bff;
   color: white;
@@ -36,7 +42,7 @@ button:hover, .btn:hover {
   background-color: #0056b3;
 }
 
-/* Logout & Profil Buttons */
+/* ==== Logout & Profil Buttons ==== */
 .logout {
   background-color: #dc3545;
 }
@@ -53,7 +59,7 @@ button:hover, .btn:hover {
   background-color: #218838;
 }
 
-/* Terminlisten */
+/* ==== Terminlisten ==== */
 ul {
   list-style-type: none;
   padding: 0;
@@ -72,7 +78,7 @@ li {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Kalender-Grid (für alte Struktur) */
+/* ==== Kalender-Grid (optional alte Struktur) ==== */
 .kalender {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -89,7 +95,7 @@ li {
   box-shadow: 0 0 3px rgba(0,0,0,0.1);
 }
 
-/* Statusfarben */
+/* ==== Statusfarben ==== */
 .frei {
   background-color: #d4edda;
 }
@@ -98,13 +104,13 @@ li {
   background-color: #f8d7da;
 }
 
-/* Logo auf Startseite */
+/* ==== Logo ==== */
 .logo {
   width: 180px;
   margin-bottom: 20px;
 }
 
-/* Buttons auf Startseite */
+/* ==== Startseite Buttons ==== */
 .btn-container {
   display: flex;
   justify-content: center;
@@ -126,14 +132,14 @@ a.button:hover {
   background-color: #0056b3;
 }
 
-/* Footer */
+/* ==== Footer ==== */
 .footer {
   margin-top: 40px;
   font-size: 14px;
   color: #aaa;
 }
 
-/* Neue Blöcke für Terminlisten, Kalender etc. */
+/* ==== Blöcke im Dashboard ==== */
 .section {
   max-width: 800px;
   margin: 30px auto;
@@ -143,7 +149,7 @@ a.button:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Tabellenkalender (für Patienten & Ärzte) */
+/* ==== Tabellenkalender ==== */
 table {
   margin: 0 auto;
   border-collapse: collapse;
@@ -160,12 +166,14 @@ th, td {
   vertical-align: top;
 }
 
-/* Topbar für Dashboard */
+/* ==== Headerbereich (z. B. Hallo, Name + Buttons) ==== */
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  width: 100%;
+  max-width: 800px;
 }
 
 .username {

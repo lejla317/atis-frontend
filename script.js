@@ -22,14 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await res.json();
-      alert(data.message);
       if (data.message === "Benutzer registriert") {
         window.location.href = "login.html";
       }
     });
   }
 
-  // 🔐 Login
+  // 🔐 Login (ohne Alert)
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -45,15 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (data.success) {
-        // 💾 Profildaten im localStorage speichern
-        localStorage.setItem("userName", data.name); // Vorname
+        localStorage.setItem("userName", data.name);
         localStorage.setItem("userRole", data.role);
         localStorage.setItem("firstname", data.profile.firstname);
         localStorage.setItem("lastname", data.profile.lastname);
         localStorage.setItem("birthday", data.profile.birthday);
         localStorage.setItem("email", data.profile.email);
 
-        alert("Login erfolgreich!");
         window.location.href = "dashboard.html";
       } else {
         alert(data.message);
