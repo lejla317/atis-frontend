@@ -15,10 +15,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.getElementById("password").value;
       const role = document.getElementById("role").value;
 
+      // Arzt-Code nur wenn Rolle Arzt gewählt
+      const arztCode = role === "arzt" ? document.getElementById("arztCode").value : "";
+
       const res = await fetch(`${BASE_URL}/api/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstname, lastname, birthday, email, password, role })
+        body: JSON.stringify({ firstname, lastname, birthday, email, password, role, arztCode })
       });
 
       const data = await res.json();
@@ -32,6 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
           errorBox.style.display = "block";
         }
       }
+    });
+
+    // Arzt-Code-Feld nur anzeigen, wenn Arzt ausgewählt
+    const roleSelect = document.getElementById("role");
+    roleSelect.addEventListener("change", () => {
+      const arztCodeField = document.getElementById("arztCodeField");
+      arztCodeField.style.display = roleSelect.value === "arzt" ? "block" : "none";
     });
   }
 

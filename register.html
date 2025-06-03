@@ -57,6 +57,17 @@
       font-size: 14px;
       color: #aaa;
     }
+
+    #arztCodeField {
+      display: none;
+    }
+
+    #registerError {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -73,6 +84,12 @@
         <option value="patient">Patient</option>
         <option value="arzt">Arzt</option>
       </select>
+      
+      <div id="arztCodeField">
+        <input type="text" id="arztCode" placeholder="Arzt-Kennwort eingeben">
+      </div>
+
+      <div id="registerError"></div>
       <button type="submit">Registrieren</button>
     </form>
   </div>
