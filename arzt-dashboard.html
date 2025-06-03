@@ -5,77 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Arzt-Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .kontakt-link {
-      font-size: 14px;
-      color: #007bff;
-      text-decoration: none;
-      display: inline-block;
-      margin-top: 4px;
-    }
-
-    .kontakt-link:hover {
-      text-decoration: underline;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .header h2 {
-      margin: 0;
-    }
-
-    table {
-      margin: 20px auto;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      border: 1px solid #999;
-      padding: 10px;
-      width: 100px;
-      height: 80px;
-      text-align: center;
-    }
-
-    .frei {
-      background-color: #d4edda;
-    }
-
-    .gebucht {
-      background-color: #f8d7da;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    li {
-      background-color: white;
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 4px;
-      box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-  </style>
 </head>
 <body>
-  <div class="header">
-    <div>
-      <h2 id="welcome">Hallo!</h2>
+  <div class="topbar">
+    <div class="left">
+      <div id="welcome" class="username">Hallo!</div>
       <a href="kontakt.html" class="kontakt-link">📬 Kontakt</a>
     </div>
-    <div>
+    <div class="right">
       <button onclick="zeigeProfil()" class="btn profil">👤 Profil</button>
       <button onclick="logout()" class="btn logout">Logout</button>
     </div>
@@ -99,7 +36,6 @@
 
   <script>
     const BASE_URL = "https://atis-backend.onrender.com";
-
     const role = localStorage.getItem("userRole");
     const arzt = localStorage.getItem("userName");
     const vorname = localStorage.getItem("firstname");
@@ -119,13 +55,7 @@
     }
 
     function zeigeProfil() {
-      alert(
-        `👤 Dein Profil:\n\n` +
-        `Vorname: ${vorname}\n` +
-        `Nachname: ${nachname}\n` +
-        `Geburtstag: ${birthday}\n` +
-        `E-Mail: ${email}`
-      );
+      alert(`👤 Dein Profil:\n\nVorname: ${vorname}\nNachname: ${nachname}\nGeburtstag: ${birthday}\nE-Mail: ${email}`);
     }
 
     const form = document.getElementById("freigabeForm");
@@ -155,11 +85,9 @@
         if (t.arzt === arzt) {
           const li = document.createElement("li");
           li.textContent = `${t.date} um ${t.time}`;
-
           if (t.status === "gebucht") {
             li.textContent += ` – Patient: ${t.patient}`;
           }
-
           if (t.status === "frei") {
             const btn = document.createElement("button");
             btn.textContent = "Löschen 🗑️";
@@ -175,7 +103,6 @@
             };
             li.appendChild(btn);
           }
-
           ul.appendChild(li);
         }
       });
@@ -184,7 +111,6 @@
     async function ladeKalender() {
       const res = await fetch(`${BASE_URL}/api/termine`);
       const termine = await res.json();
-
       const kalender = document.getElementById("kalender");
       kalender.innerHTML = "<tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>";
 
