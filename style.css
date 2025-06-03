@@ -190,3 +190,12 @@ th, td {
 .kontakt-link:hover {
   text-decoration: underline;
 }
+.start-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+  text-align: center;
+}
+
