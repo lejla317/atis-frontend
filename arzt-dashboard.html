@@ -87,8 +87,12 @@
       const ul = document.getElementById("alleTermine");
       ul.innerHTML = "";
 
+      const heute = new Date();
+      heute.setHours(0, 0, 0, 0);
+
       termine.forEach(t => {
-        if (t.arzt === arzt) {
+        const terminDatum = new Date(t.date);
+        if (t.arzt === arzt && terminDatum >= heute) {
           const li = document.createElement("li");
           li.textContent = `${t.date} um ${t.time}`;
           if (t.status === "gebucht") {
@@ -147,7 +151,7 @@
         const zelle = document.createElement("td");
         zelle.innerHTML = `<strong>${d}</strong><br>`;
 
-        const tagesTermine = termine.filter(t => t.date === datumStr && t.arzt === arzt);
+        const tagesTermine = termine.filter(t => t.date === datumStr && t.arzt === arzt && new Date(t.date) >= heute);
         tagesTermine.forEach(t => {
           const info = document.createElement("div");
           info.textContent = `${t.time} ${t.status === "frei" ? "🟢" : "❌"}`;
@@ -166,7 +170,7 @@
     }
 
     ladeGebuchteTermine();
-    ladeKalender(2);
+    ladeKalender();
   </script>
 </body>
 </html>
