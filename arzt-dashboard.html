@@ -24,8 +24,16 @@
     <button type="submit" class="btn">Termin freigeben</button>
   </form>
 
-  <h3>Termine (gebucht & frei)</h3>
-  <ul id="alleTermine"></ul>
+  <div class="termin-container">
+    <div class="termin-section">
+      <h3>Verfügbare Termine</h3>
+      <div id="freieTermine"></div>
+    </div>
+    <div class="termin-section">
+      <h3>Gebuchte Termine</h3>
+      <div id="gebuchteTermine"></div>
+    </div>
+  </div>
 
   <div class="kalender-nav">
     <button onclick="ladeKalender(currentMonth - 1)" class="btn">←</button>
@@ -84,24 +92,36 @@
     async function ladeGebuchteTermine() {
       const res = await fetch(`${BASE_URL}/api/termine`);
       const termine = await res.json();
-      const ul = document.getElementById("alleTermine");
-      ul.innerHTML = "";
-
-      const heute = new Date();
-      heute.setHours(0, 0, 0, 0);
+      const freieTermineListe = document.getElementById("freieTermine");
+      const gebuchteTermineListe = document.getElementById("gebuchteTermine");
+      freieTermineListe.innerHTML = "";
+      gebuchteTermineListe.innerHTML = "";
+      let hatFreieTermine = false;
+      let hatGebuchteTermine = false;
 
       termine.forEach(t => {
-        const terminDatum = new Date(t.date);
-        if (t.arzt === arzt && terminDatum >= heute) {
-          const li = document.createElement("li");
-          li.textContent = `${t.date} um ${t.time}`;
-          if (t.status === "gebucht") {
-            li.textContent += ` – Patient: ${t.patient}`;
-          }
+        if (t.arzt === arzt) {
+          const div = document.createElement("div");
+          div.className = t.status === "gebucht" ? "termin-item gebucht" : "termin-item";
+
+          const info = document.createElement("div");
+          info.className = "termin-info";
+
+          const zeit = document.createElement("div");
+          zeit.className = "termin-zeit";
+          zeit.textContent = `${t.date} um ${t.time}`;
+
+          const details = document.createElement("div");
+          details.className = "termin-arzt";
+
+          info.appendChild(zeit);
+          info.appendChild(details);
+
           if (t.status === "frei") {
+            details.textContent = "Verfügbar";
             const btn = document.createElement("button");
-            btn.textContent = "Löschen 🗑️";
-            btn.classList.add("btn", "logout");
+            btn.textContent = "Löschen";
+            btn.classList.add("btn", "stornieren");
             btn.onclick = async () => {
               await fetch(`${BASE_URL}/api/termine/loeschen`, {
                 method: "POST",
@@ -111,18 +131,39 @@
               ladeGebuchteTermine();
               ladeKalender();
             };
-            li.appendChild(btn);
+            div.appendChild(info);
+            div.appendChild(btn);
+            freieTermineListe.appendChild(div);
+            hatFreieTermine = true;
+          } else {
+            details.textContent = `Patient: ${t.patient}`;
+            div.appendChild(info);
+            gebuchteTermineListe.appendChild(div);
+            hatGebuchteTermine = true;
           }
-          ul.appendChild(li);
         }
       });
+
+      if (!hatFreieTermine) {
+        const noTermine = document.createElement("div");
+        noTermine.className = "no-termine";
+        noTermine.textContent = "Keine freien Termine vorhanden";
+        freieTermineListe.appendChild(noTermine);
+      }
+
+      if (!hatGebuchteTermine) {
+        const noTermine = document.createElement("div");
+        noTermine.className = "no-termine";
+        noTermine.textContent = "Keine gebuchten Termine vorhanden";
+        gebuchteTermineListe.appendChild(noTermine);
+      }
     }
 
     async function ladeKalender(month) {
       if (!month) {
         month = new Date().getMonth() + 1;
       }
-      
+
       currentMonth = month;
 
       document.querySelector("#kalenderTitel").innerText = `Kalender - ${month}/2025`
@@ -142,11 +183,9 @@
 
 
       tag = new Date(`2025-${monthAsString}-01`);
-      console.log(tag.getFullYear(), tag.getMonth() + 1, 0);
       const daysInMonth = new Date(tag.getFullYear(), tag.getMonth() + 1, 0).getDate();
-
+      const heute = new Date();
       for (let d = 1; d <= daysInMonth; d++) {
-        console.log(d);
         const datumStr = `2025-${monthAsString}-${d.toString().padStart(2, "0")}`;
         const zelle = document.createElement("td");
         zelle.innerHTML = `<strong>${d}</strong><br>`;

@@ -90,27 +90,27 @@
       let hatMeineTermine = false;
 
       const jetzt = new Date();
-      
+
       termine.forEach(t => {
         const terminDatum = new Date(t.date + "T" + t.time);
         if (t.status === "frei" && terminDatum > jetzt) {
           const div = document.createElement("div");
           div.className = "termin-item";
-          
+
           const info = document.createElement("div");
           info.className = "termin-info";
-          
+
           const zeit = document.createElement("div");
           zeit.className = "termin-zeit";
           zeit.textContent = `${t.date} um ${t.time}`;
-          
+
           const arzt = document.createElement("div");
           arzt.className = "termin-arzt";
           arzt.textContent = t.arzt;
-          
+
           info.appendChild(zeit);
           info.appendChild(arzt);
-          
+
           const btn = document.createElement("button");
           btn.textContent = "Buchen";
           btn.classList.add("btn", "buchen");
@@ -131,21 +131,21 @@
         if (t.status === "gebucht" && t.patient === patient && terminDatum > jetzt) {
           const div = document.createElement("div");
           div.className = "termin-item gebucht";
-          
+
           const info = document.createElement("div");
           info.className = "termin-info";
-          
+
           const zeit = document.createElement("div");
           zeit.className = "termin-zeit";
           zeit.textContent = `${t.date} um ${t.time}`;
-          
+
           const arzt = document.createElement("div");
           arzt.className = "termin-arzt";
           arzt.textContent = t.arzt;
-          
+
           info.appendChild(zeit);
           info.appendChild(arzt);
-          
+
           const btn = document.createElement("button");
           btn.textContent = "Stornieren";
           btn.classList.add("btn", "stornieren");
@@ -209,6 +209,7 @@
         const zelle = document.createElement("td");
         zelle.innerHTML = `<strong>${d}</strong><br>`;
 
+        const jetzt = new Date();
         const tagesTermine = termine.filter(t => t.date === datumStr && t.patient === patient && new Date(t.date + "T" + t.time) > jetzt);
         tagesTermine.forEach(t => {
           const eintrag = document.createElement("div");
