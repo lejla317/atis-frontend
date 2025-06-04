@@ -20,14 +20,16 @@
 
   <h2>Patient-Dashboard</h2>
 
-  <div class="section">
-    <h3>Verfügbare Termine</h3>
-    <ul id="terminListe"></ul>
-  </div>
+  <div class="termin-container">
+    <div class="termin-section">
+      <h3>Verfügbare Termine</h3>
+      <div id="terminListe"></div>
+    </div>
 
-  <div class="section">
-    <h3>Meine Termine</h3>
-    <ul id="meineTermine"></ul>
+    <div class="termin-section">
+      <h3>Meine Termine</h3>
+      <div id="meineTermine"></div>
+    </div>
   </div>
 
   <div class="section">
@@ -84,16 +86,34 @@
       freieListe.innerHTML = "";
       meineListe.innerHTML = "";
 
+      let hatFreieTermine = false;
+      let hatMeineTermine = false;
+
       const jetzt = new Date();
       
       termine.forEach(t => {
         const terminDatum = new Date(t.date + "T" + t.time);
         if (t.status === "frei" && terminDatum > jetzt) {
-          const li = document.createElement("li");
-          li.textContent = `${t.date} um ${t.time} bei ${t.arzt}`;
+          const div = document.createElement("div");
+          div.className = "termin-item";
+          
+          const info = document.createElement("div");
+          info.className = "termin-info";
+          
+          const zeit = document.createElement("div");
+          zeit.className = "termin-zeit";
+          zeit.textContent = `${t.date} um ${t.time}`;
+          
+          const arzt = document.createElement("div");
+          arzt.className = "termin-arzt";
+          arzt.textContent = t.arzt;
+          
+          info.appendChild(zeit);
+          info.appendChild(arzt);
+          
           const btn = document.createElement("button");
           btn.textContent = "Buchen";
-          btn.classList.add("btn");
+          btn.classList.add("btn", "buchen");
           btn.onclick = async () => {
             await fetch(`${BASE_URL}/api/termine/buchen`, {
               method: "POST",
@@ -102,16 +122,33 @@
             });
             ladeTermine();
           };
-          li.appendChild(btn);
-          freieListe.appendChild(li);
+          div.appendChild(info);
+          div.appendChild(btn);
+          freieListe.appendChild(div);
+          hatFreieTermine = true;
         }
 
         if (t.status === "gebucht" && t.patient === patient && terminDatum > jetzt) {
-          const li = document.createElement("li");
-          li.textContent = `${t.date} um ${t.time} bei ${t.arzt}`;
+          const div = document.createElement("div");
+          div.className = "termin-item gebucht";
+          
+          const info = document.createElement("div");
+          info.className = "termin-info";
+          
+          const zeit = document.createElement("div");
+          zeit.className = "termin-zeit";
+          zeit.textContent = `${t.date} um ${t.time}`;
+          
+          const arzt = document.createElement("div");
+          arzt.className = "termin-arzt";
+          arzt.textContent = t.arzt;
+          
+          info.appendChild(zeit);
+          info.appendChild(arzt);
+          
           const btn = document.createElement("button");
           btn.textContent = "Stornieren";
-          btn.classList.add("btn", "logout");
+          btn.classList.add("btn", "stornieren");
           btn.onclick = async () => {
             await fetch(`${BASE_URL}/api/termine/stornieren`, {
               method: "POST",
@@ -120,10 +157,26 @@
             });
             ladeTermine();
           };
-          li.appendChild(btn);
-          meineListe.appendChild(li);
+          div.appendChild(info);
+          div.appendChild(btn);
+          meineListe.appendChild(div);
+          hatMeineTermine = true;
         }
       });
+
+      if (!hatFreieTermine) {
+        const noTermine = document.createElement("div");
+        noTermine.className = "no-termine";
+        noTermine.textContent = "Aktuell keine verfügbaren Termine";
+        freieListe.appendChild(noTermine);
+      }
+
+      if (!hatMeineTermine) {
+        const noTermine = document.createElement("div");
+        noTermine.className = "no-termine";
+        noTermine.textContent = "Sie haben keine gebuchten Termine";
+        meineListe.appendChild(noTermine);
+      }
 
       ladeKalender();
     }
