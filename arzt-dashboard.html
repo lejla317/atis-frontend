@@ -27,7 +27,11 @@
   <h3>Termine (gebucht & frei)</h3>
   <ul id="alleTermine"></ul>
 
-  <h3>Kalender – Juni 2025</h3>
+  <div class="kalender-nav">
+    <button onclick="ladeKalender(currentMonth - 1)" class="btn">←</button>
+    <h3 id="kalenderTitel">Kalender – Juni 2025</h3>
+    <button onclick="ladeKalender(currentMonth + 1)" class="btn">→</button>
+  </div>
   <table id="kalender">
     <tr>
       <th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th>
@@ -42,6 +46,8 @@
     const nachname = localStorage.getItem("lastname");
     const email = localStorage.getItem("email");
     const birthday = localStorage.getItem("birthday");
+
+    let  currentMonth = new Date().getMonth() + 1;
 
     if (!arzt || role !== "arzt") {
       window.location.href = "login.html";
@@ -108,22 +114,36 @@
       });
     }
 
-    async function ladeKalender() {
+    async function ladeKalender(month) {
+      if (!month) {
+        month = new Date().getMonth() + 1;
+      }
+      
+      currentMonth = month;
+
+      document.querySelector("#kalenderTitel").innerText = `Kalender - ${month}/2025`
+
       const res = await fetch(`${BASE_URL}/api/termine`);
       const termine = await res.json();
       const kalender = document.getElementById("kalender");
       kalender.innerHTML = "<tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>";
 
+      const monthAsString = month.toString().padStart(2, "0");
       let zeile = document.createElement("tr");
-      let tag = new Date("2025-06-01");
+      let tag = new Date(`2025-${monthAsString}-01`);
       while (tag.getDay() !== 1) {
         zeile.appendChild(document.createElement("td"));
         tag.setDate(tag.getDate() - 1);
       }
 
-      tag = new Date("2025-06-01");
-      for (let d = 1; d <= 30; d++) {
-        const datumStr = `2025-06-${d.toString().padStart(2, "0")}`;
+
+      tag = new Date(`2025-${monthAsString}-01`);
+      console.log(tag.getFullYear(), tag.getMonth() + 1, 0);
+      const daysInMonth = new Date(tag.getFullYear(), tag.getMonth() + 1, 0).getDate();
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        console.log(d);
+        const datumStr = `2025-${monthAsString}-${d.toString().padStart(2, "0")}`;
         const zelle = document.createElement("td");
         zelle.innerHTML = `<strong>${d}</strong><br>`;
 
@@ -136,7 +156,7 @@
         });
 
         zeile.appendChild(zelle);
-        if (tag.getDay() === 0 || d === 30) {
+        if (tag.getDay() === 0 || d === daysInMonth) {
           kalender.appendChild(zeile);
           zeile = document.createElement("tr");
         }
@@ -146,7 +166,7 @@
     }
 
     ladeGebuchteTermine();
-    ladeKalender();
+    ladeKalender(2);
   </script>
 </body>
 </html>

@@ -199,3 +199,21 @@ th, td {
   text-align: center;
 }
 
+.kalender-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.kalender-nav h3 {
+  margin: 0;
+}
+
+.kalender-nav button {
+  padding: 8px 12px;
+  min-width: 40px;
+}
+
